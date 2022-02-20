@@ -1,0 +1,52 @@
+#!/usr/bin/env python3
+
+import asyncio
+import os
+
+import asyncpraw
+
+
+class RedditBotBase(object):
+    """base class for bot config"""
+
+    def __init__(self):
+        self.flair = None
+        self.user_agent = f"{os.getenv('BOT_NAME')} | {os.getenv('VERSION')} | By {os.getenv('DEVELOPER')}"
+        self.subreddit = os.getenv("SUBREDDIT")
+        self.delay = os.getenv("DELAY")
+        self.reddit = asyncpraw.Reddit(
+            client_id=os.getenv("CLIENT_ID"),
+            client_secret=os.getenv("CLIENT_SECRET"),
+            username=os.getenv("USERNAME"),
+            password=os.getenv("PASSWORD"),
+            user_agent=self.user_agent,
+        )
+
+        print(f"Starting up... {self.user_agent}")
+
+
+# UNCOMMENT the below block to run example
+
+# class Bot(RedditBotBase):
+#     """subclass RedditBotBase and include main method for processing logic"""
+#     async def main(self):
+#         print(f"...some bot is running")
+
+#         subreddit = await self.reddit.subreddit(self.subreddit)
+#         async for submission in subreddit.stream.submissions():
+#             await self.process_submission(submission)
+
+#         # sleep to avoid rate limit
+#         asyncio.sleep(int(self.delay))
+
+#     async def process_submission(self, submission: asyncpraw.models.Submission):
+#         """process submission (or any reddit object)"""
+#         if not submission:
+#             return
+#         print(submission.title)
+
+
+# if __name__ == "__main__":
+#     b = Bot()
+#     loop = asyncio.get_event_loop()
+#     loop.run_until_complete(b.main())
